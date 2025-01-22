@@ -2,7 +2,7 @@ CC = gcc
 FLAGS = -Wall -Werror -Wextra -std=c11
 GCOV_FLAGS = --coverage
 CHECK_FLAGS = -lcheck -lm -lsubunit
-CFILES = memory.c operations.c utils.c compare.c 
+CFILES = memory.c operations.c utils.c compare.c transforms.c 
 OBJS = $(CFILES:.c=.o)
 LIB_FILE = s21_matrix.a
 
