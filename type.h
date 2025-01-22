@@ -7,4 +7,9 @@ typedef struct matrix_struct {
     int columns;
 } matrix_t;
 
+typedef enum {
+  kCodeOK = 0,
+  kCodeIncorrect = 1,
+  kCodeCalcError = 2,
+} S21OperationsResultCode;
 #endif
