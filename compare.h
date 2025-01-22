@@ -2,6 +2,10 @@
 #define COMPARE_H
 
 #include "type.h"
+#include "utils.h" 
+
+#include <math.h>
+#include <stdlib.h>
 
 #define SUCCESS 1
 #define FAILURE 0
