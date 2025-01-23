@@ -70,7 +70,14 @@ int triangulate(matrix_t* A) {
 /*int s21_inverse_matrix(matrix_t *A, matrix_t *result) {*/
 /*}*/
 
-/*int s21_determinant(matrix_t *A, double *result) {*/
-/*}*/
+int s21_determinant(matrix_t *A, double *result) {
+  triangulate(A);
+  double det = 1.0;
+  for (int i = 0; i < A->rows; i++) {
+    det *= A->matrix[i][i];
+  }
+  *result = det;
+  return 0;
+}
 
 
