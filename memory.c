@@ -25,13 +25,14 @@ int s21_create_matrix(int rows, int columns, matrix_t *result) {
 }
 
 void s21_remove_matrix(matrix_t *A) {
-  for (int i = 0; i < A->rows; i++) {
-    free(A->matrix[i]);
-    A->matrix[i] = NULL;
+  if (A != NULL && A->columns > 0 && A->rows > 0 && A->matrix != NULL){
+    for (int i = 0; i < A->rows; i++) {
+      free(A->matrix[i]);
+      A->matrix[i] = NULL;
+    }
+    free(A->matrix);
+    A->matrix = NULL;
+    A->columns = 0;
+    A->rows = 0;
   }
-  free(A->matrix);
-  A->matrix = NULL;
-  A->columns = 0;
-  A->rows = 0;
 }
-
