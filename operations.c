@@ -23,7 +23,7 @@ int s21_apply_operation(matrix_t *A, matrix_t *B, matrix_t *result,
 
   if(s21_create_matrix(A->rows, A->columns, result) != 1) {
     for (int i = 0; i < result->rows; i++) {
-      for (int j = 0; j < result->columns; i++) {
+      for (int j = 0; j < result->columns; j++) {
         result->matrix[i][j] = s21_operator(A->matrix[i][j], B->matrix[i][j]);
       }
     }
@@ -49,7 +49,7 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
   S21OperationsResultCode result_code = kCodeOK;
   if (s21_create_matrix(A->rows, A->columns, result) != 1) {
     for (int i = 0; i < result->rows; i++) {
-      for (int j = 0; j < result->columns; i++) {
+      for (int j = 0; j < result->columns; j++) {
         result->matrix[i][j] = A->matrix[i][j]*number;
       }
     }
@@ -70,10 +70,10 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 
   S21OperationsResultCode result_code = kCodeOK;
 
-  if(s21_create_matrix(A->rows, A->columns, result) != 1) {
-    for (int i = 0; i < result->rows; i++) {
-      for (int j = 0; j < B->columns; i++) {
-        for (int k = 0; k < result->rows;i++) {
+  if(s21_create_matrix(A->rows, B->columns, result) != 1) {
+    for (int i = 0; i < A->rows; i++) {
+      for (int j = 0; j < B->columns; j++) {
+        for (int k = 0; k < A->columns;k++) {
           result->matrix[i][j] += A->matrix[i][k] * B->matrix[k][j];
         }
       }
