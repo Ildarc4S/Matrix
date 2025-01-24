@@ -6,15 +6,18 @@
 #include "operations.h"
 
 int s21_transpose(matrix_t *A, matrix_t *result) {
-  if (A == NULL || result == NULL || A->rows <= 0 || A->columns <= 0) {
+  if (A == NULL || result == NULL) {
     return kCodeIncorrect;
   }
-
+  if (A->rows <= 0 || A->columns <= 0) {
+    return kCodeIncorrect; // kCodeCalcError
+  }
+  
   int result_code = 0;
   if (s21_create_matrix(A->columns, A->rows, result) != 1) {
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < A->columns; j++) {
-	result->matrix[i][j] = A->matrix[j][i];
+	result->matrix[j][i] = A->matrix[i][j];
       }
     }
   } else {
@@ -25,13 +28,13 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
 }
 
 int compareNum(double a, double b) {
-  return fabs(a - b) <= 0e-7;
+  return fabs(a - b) < 1e-7;
 }
 
 int s21_max_in_column(matrix_t* A, int column) {
-  int max_index = 0;
-  for (int i = 1; i < A->rows; i++) {
-    if (!compareNum(fabs(A->matrix[max_index][column]), fabs(A->matrix[i][column]))) {
+  int max_index = column;
+  for (int i = column+1; i < A->rows; i++) {
+    if (fabs(A->matrix[max_index][column]) < fabs(A->matrix[i][column])) {
       max_index = i;
     }
   }
@@ -48,11 +51,11 @@ void s21_swap_rows(matrix_t* A, int row_one, int row_two) {
 
 int s21_triangulate_matrix(matrix_t* A, int* swap_count) {
   int result_code = 0;
-  for (int curr_column = 0; curr_column< A->rows && result_code == 0; curr_column++) {
+  for (int curr_column = 0; curr_column < A->rows && result_code == 0; curr_column++) {
 
     int max_in_column = s21_max_in_column(A, curr_column); 
 
-    if (fabs(A->matrix[max_in_column][curr_column]) < 1e-10) {
+    if (fabs(A->matrix[max_in_column][curr_column]) < 1e-12) {
       result_code = -1;
     } else {
       if (max_in_column != curr_column) {
@@ -62,7 +65,7 @@ int s21_triangulate_matrix(matrix_t* A, int* swap_count) {
 
       for (int j = curr_column+1; j < A->rows; j++) {
         double factor = A->matrix[j][curr_column]/A->matrix[curr_column][curr_column];
-        for (int i = curr_column; i < A->rows; i++) {
+        for (int i = curr_column; i < A->columns; i++) {
           A->matrix[j][i] -= A->matrix[curr_column][i]*factor;
         }
       }
@@ -85,7 +88,7 @@ void s21_create_minor(matrix_t* A, matrix_t* B, int skip_row, int skip_column) {
 }
 
 int s21_calc_complements(matrix_t *A, matrix_t *result) {
-  if (A == NULL || result == NULL || A->rows == 0 || A->columns == 0) {
+  if (A == NULL || result == NULL || A->rows <= 0 || A->columns <= 0) {
     return kCodeIncorrect;
   }
 
@@ -108,8 +111,10 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
       result->matrix[i][j] = det*factor;
     }
   }
- }
   s21_remove_matrix(&minor);
+ } else {
+   result_code = kCodeIncorrect;
+ }
 
   return result_code;
 }
@@ -126,7 +131,7 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
   S21OperationsResultCode result_code = kCodeOK;
   double det = 0.0;
   s21_determinant(A, &det);
-  if (det != 0.0) {
+  if (det == 0.0) {
     result_code = kCodeCalcError; 
   } else {
     det = 1.0 / det;
@@ -176,7 +181,6 @@ int s21_determinant(matrix_t *A, double *result) {
     }
   }
   *result = det;
-  s21_print_matrix(&B);
   s21_remove_matrix(&B);
   return result_code;
 }
