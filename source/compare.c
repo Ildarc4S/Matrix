@@ -1,7 +1,7 @@
-#include "compare.h"
+#include "../include/compare.h"
 
 int s21_eq_matrix(matrix_t *A, matrix_t *B) {
-  if (A == NULL || B == NULL ) {
+  if (A == NULL || B == NULL) {
     return FAILURE;
   }
   if (!s21_size_eq(A, B)) {
@@ -21,4 +21,3 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B) {
 
   return result_code;
 }
-

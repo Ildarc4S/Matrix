@@ -19,6 +19,10 @@ test: $(LIB_FILE)
 	$(CC) $(FLAGS) $(TEST_FILE) -L. $(LIB_FILE) $(CHECK_FLAGS) -o test_exec
 	./test_exec
 
+test_valgrind: $(LIB_FILE)
+	$(CC) $(FLAGS) $(TEST_FILE) -L. $(LIB_FILE) $(CHECK_FLAGS) -o test_exec
+	valgrind ./test_exec
+
 gcov_report:
 	$(CC) $(FLAGS) $(TEST_FILE) $(CFILES) $(CHECK_FLAGS) $(GCOV_FLAGS) -o gcov_test_lcov
 	./gcov_test_lcov

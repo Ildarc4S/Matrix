@@ -2,7 +2,8 @@
 #define OPERATIONS_H
 
 #include "type.h"
-#include <stdlib.h>
+#include "memory.h"
+#include "utils.h"
 
 int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result);
 int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result);

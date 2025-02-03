@@ -1,6 +1,8 @@
 #ifndef MATRIX_TYPE_H
 #define MATRIX_TYPE_H
 
+#include <stdlib.h>
+
 typedef struct matrix_struct {
     double** matrix;
     int rows;

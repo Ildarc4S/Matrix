@@ -1,10 +1,5 @@
-#include "transforms.h"
-#include "memory.h"
-#include <math.h>
-#include <stdlib.h>
-#include "utils.h"
-#include "operations.h"
-#include <stdio.h>
+#include "../include/transforms.h"
+
 int s21_transpose(matrix_t *A, matrix_t *result) {
   if (A == NULL || result == NULL) {
     return kCodeIncorrect;
@@ -12,12 +7,12 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
   if (A->rows <= 0 || A->columns <= 0) {
     return kCodeIncorrect; // kCodeCalcError
   }
-  
+
   int result_code = 0;
   if (s21_create_matrix(A->columns, A->rows, result) != 1) {
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < A->columns; j++) {
-	result->matrix[j][i] = A->matrix[i][j];
+        result->matrix[j][i] = A->matrix[i][j];
       }
     }
   } else {
@@ -27,13 +22,11 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
   return result_code;
 }
 
-int compareNum(double a, double b) {
-  return fabs(a - b) < 1e-7;
-}
+int compareNum(double a, double b) { return fabs(a - b) < 1e-7; }
 
-int s21_max_in_column(matrix_t* A, int column) {
+int s21_max_in_column(matrix_t *A, int column) {
   int max_index = column;
-  for (int i = column+1; i < A->rows; i++) {
+  for (int i = column + 1; i < A->rows; i++) {
     if (fabs(A->matrix[max_index][column]) < fabs(A->matrix[i][column])) {
       max_index = i;
     }
@@ -41,7 +34,7 @@ int s21_max_in_column(matrix_t* A, int column) {
   return max_index;
 }
 
-void s21_swap_rows(matrix_t* A, int row_one, int row_two) {
+void s21_swap_rows(matrix_t *A, int row_one, int row_two) {
   for (int i = 0; i < A->columns; i++) {
     double temp = A->matrix[row_one][i];
     A->matrix[row_one][i] = A->matrix[row_two][i];
@@ -49,11 +42,22 @@ void s21_swap_rows(matrix_t* A, int row_one, int row_two) {
   }
 }
 
-int s21_triangulate_matrix(matrix_t* A, int* swap_count) {
-  int result_code = 0;
-  for (int curr_column = 0; curr_column < A->rows && result_code == 0; curr_column++) {
+void s21_triangulate_process(matrix_t* A, int curr_column) {
+  for (int j = curr_column + 1; j < A->rows; j++) {
+    double factor =
+        A->matrix[j][curr_column] / A->matrix[curr_column][curr_column];
+    for (int i = curr_column; i < A->columns; i++) {
+      A->matrix[j][i] -= A->matrix[curr_column][i] * factor;
+    }
+  }
+}
 
-    int max_in_column = s21_max_in_column(A, curr_column); 
+int s21_triangulate_matrix(matrix_t *A, int *swap_count) {
+  int result_code = 0;
+  for (int curr_column = 0; curr_column < A->rows && result_code == 0;
+       curr_column++) {
+
+    int max_in_column = s21_max_in_column(A, curr_column);
 
     if (fabs(A->matrix[max_in_column][curr_column]) < 1e-12) {
       result_code = -1;
@@ -62,28 +66,25 @@ int s21_triangulate_matrix(matrix_t* A, int* swap_count) {
         s21_swap_rows(A, max_in_column, curr_column);
         ++(*swap_count);
       }
-
-      for (int j = curr_column+1; j < A->rows; j++) {
-        double factor = A->matrix[j][curr_column]/A->matrix[curr_column][curr_column];
-        for (int i = curr_column; i < A->columns; i++) {
-          A->matrix[j][i] -= A->matrix[curr_column][i]*factor;
-        }
-      }
+      s21_triangulate_process(A, curr_column);
     }
   }
   return result_code;
 }
 
-void s21_create_minor(matrix_t* A, matrix_t* B, int skip_row, int skip_column) {
+void s21_create_minor(matrix_t *A, matrix_t *B, int skip_row, int skip_column) {
   for (int i = 0, row = 0; i < A->rows; i++) {
-    if (i != skip_row) {
-       for (int j = 0, column = 0; j < A->columns; j++) {
-         if (j != skip_column) {
-           B->matrix[row][column++] = A->matrix[i][j];
-         }
-       }
-      row++; 
-    } 
+    int skip = 0;
+    if (i == skip_row) {
+      skip = 1;
+    }
+
+    for (int j = 0, column = 0; j < A->columns && !skip; j++) {
+      if (j != skip_column) {
+        B->matrix[row][column++] = A->matrix[i][j];
+      }
+    }
+    row++;
   }
 }
 
@@ -95,30 +96,31 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
   if (A->rows != A->columns) {
     return kCodeCalcError;
   }
-  
+
   S21OperationsResultCode result_code = kCodeOK;
 
   matrix_t minor;
   if (A->rows == 1) {
     if (s21_create_matrix(A->rows, A->columns, result) != 1) {
-       result->matrix[0][0] = A->matrix[0][0];
+      result->matrix[0][0] = 1;
     }
-  } else if (s21_create_matrix(A->rows, A->columns, result) != 1 && s21_create_matrix(A->rows-1, A->columns-1, &minor) != 1) {
-  for (int i = 0; i < A->rows; i++) {
-    for (int j = 0; j < A->columns; j++) {
-      double det = 0.0;
-      double factor = (i + j) % 2 != 0 ? -1.0 : 1.0;
+  } else if (s21_create_matrix(A->rows, A->columns, result) != 1 &&
+             s21_create_matrix(A->rows - 1, A->columns - 1, &minor) != 1) {
+    for (int i = 0; i < A->rows; i++) {
+      for (int j = 0; j < A->columns; j++) {
+        double det = 0.0;
+        double factor = (i + j) % 2 != 0 ? -1.0 : 1.0;
 
-      s21_create_minor(A, &minor, i, j);
-      s21_determinant(&minor, &det);
-      
-      result->matrix[i][j] = det*factor;
+        s21_create_minor(A, &minor, i, j);
+        s21_determinant(&minor, &det);
+
+        result->matrix[i][j] = det * factor;
+      }
     }
+    s21_remove_matrix(&minor);
+  } else {
+    result_code = kCodeIncorrect;
   }
-  s21_remove_matrix(&minor);
- } else {
-   result_code = kCodeIncorrect;
- }
 
   return result_code;
 }
@@ -136,36 +138,26 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
   double det = 0.0;
   s21_determinant(A, &det);
   if (det == 0.0) {
-    result_code = kCodeCalcError; 
+    result_code = kCodeCalcError;
   } else {
-    printf("Det: %f\n", det);
     det = 1.0 / det;
-    printf("Det: %f\n", det);
     matrix_t multiplier, complements;
 
-    printf("complements\n");
     s21_calc_complements(A, &complements);
-    s21_print_matrix(&complements);
-   
-    printf("transpose\n");
+
     s21_transpose(&complements, &multiplier);
-    s21_print_matrix(&multiplier);
+    s21_mult_number(&multiplier, det, result);
 
-    printf("mult\n");
-    s21_mult_number(&multiplier, det, result);     
-
-    s21_print_matrix(result);
-    
     s21_remove_matrix(&multiplier);
     s21_remove_matrix(&complements);
   }
   return result_code;
 }
 
-void s21_copy_matrix(matrix_t* A, matrix_t* B) {
+void s21_copy_matrix(matrix_t *A, matrix_t *B) {
   for (int i = 0; i < A->rows; i++) {
     for (int j = 0; j < A->columns; j++) {
-       B->matrix[i][j] = A->matrix[i][j];
+      B->matrix[i][j] = A->matrix[i][j];
     }
   }
 }
@@ -190,7 +182,6 @@ int s21_determinant(matrix_t *A, double *result) {
   if (s21_triangulate_matrix(&B, &swap_count) == -1) {
     det = 0.0;
   } else {
-    s21_print_matrix(&B);
     if (swap_count % 2 == 1) {
       det = -1.0;
     }
@@ -202,5 +193,3 @@ int s21_determinant(matrix_t *A, double *result) {
   s21_remove_matrix(&B);
   return result_code;
 }
-
-

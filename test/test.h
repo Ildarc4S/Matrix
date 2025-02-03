@@ -1,10 +1,11 @@
+#include <check.h>
+#include "../s21_matrix.h"
 
 #ifndef UNIT_TESTS_H
 #define UNIT_TESTS_H
 
 #include <check.h>
 
-#include "../s21_matrix.h"
 
 enum work_res { OK, INCORRECT_MATRIX, CALCULATION_ERR };
 void s21_suit_execution(Suite *suite, int *failed_count);

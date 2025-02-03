@@ -1,19 +1,15 @@
-#include "memory.h"
-#include <stdlib.h>
+#include "../include/memory.h"
 
 int s21_create_matrix(int rows, int columns, matrix_t *result) {
   S21OperationsResultCode result_code = kCodeOK;
   if (rows <= 0 || columns <= 0 || result == NULL) {
-    /*if (result != NULL) {*/
-      /*result->matrix = NULL;*/
-    /*}*/
     return kCodeIncorrect;
   }
 
-  result->matrix = (double**)calloc(rows, sizeof(double*));
+  result->matrix = (double **)calloc(rows, sizeof(double *));
   if (result->matrix != NULL) {
     for (int i = 0; i < rows; i++) {
-      result->matrix[i] = (double*)calloc(columns, sizeof(double));
+      result->matrix[i] = (double *)calloc(columns, sizeof(double));
     }
     result->columns = columns;
     result->rows = rows;
@@ -25,7 +21,7 @@ int s21_create_matrix(int rows, int columns, matrix_t *result) {
 }
 
 void s21_remove_matrix(matrix_t *A) {
-  if (A != NULL && A->columns > 0 && A->rows > 0 && A->matrix != NULL){
+  if (A != NULL && A->columns > 0 && A->rows > 0 && A->matrix != NULL) {
     for (int i = 0; i < A->rows; i++) {
       free(A->matrix[i]);
       A->matrix[i] = NULL;

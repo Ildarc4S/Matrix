@@ -28,7 +28,7 @@ START_TEST(create_1) {
 }
 END_TEST
 
-START_TEST(compare_1) {  // +
+START_TEST(compare_1) { // +
   matrix_t a = {0};
   s21_create_matrix(2, 2, &a);
   matrix_t b = {0};
@@ -39,7 +39,7 @@ START_TEST(compare_1) {  // +
 }
 END_TEST
 
-START_TEST(compare_2) {  // - bc size
+START_TEST(compare_2) { // - bc size
   matrix_t a = {0};
   s21_create_matrix(2, 3, &a);
   matrix_t b = {0};
@@ -50,7 +50,7 @@ START_TEST(compare_2) {  // - bc size
 }
 END_TEST
 
-START_TEST(compare_3) {  // - bc values
+START_TEST(compare_3) { // - bc values
   matrix_t a = {0};
   s21_create_matrix(2, 3, &a);
   matrix_t b = {0};
@@ -270,7 +270,8 @@ START_TEST(mul_mat_1) {
     for (int j = 0; j < 3; j++) {
       a.matrix[i][j] = 2.13243;
       b.matrix[j][i] = 3.34314;
-      if (j != 2) true_result.matrix[i][j] = 21.3870360906;
+      if (j != 2)
+        true_result.matrix[i][j] = 21.3870360906;
     }
   ck_assert_int_eq(0, s21_mult_matrix(&a, &b, &result));
   ck_assert_int_eq(1, s21_eq_matrix(&result, &true_result));
@@ -399,7 +400,7 @@ START_TEST(complements_2) {
   matrix_t true_result = {0};
   s21_create_matrix(1, 1, &true_result);
   a.matrix[0][0] = 0.5;
-  true_result.matrix[0][0] = 0.5;
+  true_result.matrix[0][0] = 1;
   ck_assert_int_eq(0, s21_calc_complements(&a, &result));
   ck_assert_int_eq(1, s21_eq_matrix(&result, &true_result));
   s21_remove_matrix(&a);
@@ -689,4 +690,3 @@ int main() {
   srunner_free(runner);
   return (success == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-
