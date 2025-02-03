@@ -2,16 +2,16 @@
 #include "utils.h"
 #include "memory.h"
 
-int s21_operator_sum(int a, int b) {
+double s21_operator_sum(double a, double b) {
   return a+b;
 }
 
-int s21_operator_sub(int a, int b) {
+double s21_operator_sub(double a, double b) {
   return a-b;
 }
 
 int s21_apply_operation(matrix_t *A, matrix_t *B, matrix_t *result,
-                        int (*s21_operator)(int, int)) {
+                        double (*s21_operator)(double, double)) {
   if (A == NULL || B == NULL) {
     return kCodeIncorrect;
   }
