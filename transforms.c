@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include "utils.h"
 #include "operations.h"
-
+#include <stdio.h>
 int s21_transpose(matrix_t *A, matrix_t *result) {
   if (A == NULL || result == NULL) {
     return kCodeIncorrect;
@@ -138,11 +138,24 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
   if (det == 0.0) {
     result_code = kCodeCalcError; 
   } else {
+    printf("Det: %f\n", det);
     det = 1.0 / det;
+    printf("Det: %f\n", det);
     matrix_t multiplier, complements;
+
+    printf("complements\n");
     s21_calc_complements(A, &complements);
+    s21_print_matrix(&complements);
+   
+    printf("transpose\n");
     s21_transpose(&complements, &multiplier);
+    s21_print_matrix(&multiplier);
+
+    printf("mult\n");
     s21_mult_number(&multiplier, det, result);     
+
+    s21_print_matrix(result);
+    
     s21_remove_matrix(&multiplier);
     s21_remove_matrix(&complements);
   }
