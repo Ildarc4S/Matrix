@@ -5,7 +5,7 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
     return CODE_INCORRECT;
   }
   if (A->rows <= 0 || A->columns <= 0) {
-    return CODE_INCORRECT; 
+    return CODE_INCORRECT;
   }
 
   int result_code = 0;

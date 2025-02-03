@@ -12,7 +12,7 @@ START_TEST(compare_1) {
 }
 END_TEST
 
-START_TEST(compare_2) { 
+START_TEST(compare_2) {
   matrix_t b = {0};
   s21_create_matrix(2, 2, &b);
   ck_assert_int_eq(0, s21_eq_matrix(NULL, &b));
@@ -20,7 +20,7 @@ START_TEST(compare_2) {
 }
 END_TEST
 
-START_TEST(compare_3) { 
+START_TEST(compare_3) {
   matrix_t b = {0};
   s21_create_matrix(2, 2, &b);
   ck_assert_int_eq(0, s21_eq_matrix(&b, NULL));
@@ -28,8 +28,7 @@ START_TEST(compare_3) {
 }
 END_TEST
 
-
-START_TEST(compare_4) { 
+START_TEST(compare_4) {
   matrix_t a = {0}, b = {0};
   s21_create_matrix(2, 3, &a);
   s21_create_matrix(2, 2, &b);
@@ -58,21 +57,20 @@ START_TEST(compare_5) {
   s21_remove_matrix(&b);
 }
 
-
 Suite *compare_suite(void) {
-    Suite *s;
-    TCase *tc_core;
+  Suite *s;
+  TCase *tc_core;
 
-    s = suite_create("Matrix compare");
+  s = suite_create("Matrix compare");
 
-    tc_core = tcase_create("Core");
+  tc_core = tcase_create("Core");
 
-    tcase_add_test(tc_core, compare_1);
-    tcase_add_test(tc_core, compare_2);
-    tcase_add_test(tc_core, compare_3);
-    tcase_add_test(tc_core, compare_4);
-    tcase_add_test(tc_core, compare_5);
-    suite_add_tcase(s, tc_core);
+  tcase_add_test(tc_core, compare_1);
+  tcase_add_test(tc_core, compare_2);
+  tcase_add_test(tc_core, compare_3);
+  tcase_add_test(tc_core, compare_4);
+  tcase_add_test(tc_core, compare_5);
+  suite_add_tcase(s, tc_core);
 
-    return s;
+  return s;
 }

@@ -1,6 +1,6 @@
 #include "s21_test.h"
 
-void s21_initialize_matrix(matrix_t* A, double start_value,
+void s21_initialize_matrix(matrix_t *A, double start_value,
                            double iteration_step) {
   if (A != NULL && A->matrix != NULL) {
     double value = start_value;
@@ -236,7 +236,7 @@ START_TEST(transp_2) {
   s21_create_matrix(3, 2, &a);
   matrix_t result = {0};
   matrix_t check_result = {0};
-  
+
   s21_create_matrix(2, 3, &check_result);
   a.matrix[0][0] = 1;
   a.matrix[0][1] = 4;
@@ -339,7 +339,7 @@ START_TEST(transp_5) {
 END_TEST
 
 START_TEST(transp_6) {
-matrix_t result = {0};
+  matrix_t result = {0};
   s21_create_matrix(3, 2, &result);
   ck_assert_int_eq(1, s21_transpose(NULL, &result));
   s21_remove_matrix(&result);
@@ -435,7 +435,7 @@ START_TEST(transp_10) {
 END_TEST
 
 START_TEST(inverse_1) {
- matrix_t a = {0};
+  matrix_t a = {0};
   s21_create_matrix(2, 3, &a);
   matrix_t result = {0};
   s21_create_matrix(3, 2, &result);
@@ -479,7 +479,7 @@ START_TEST(inverse_3) {
 
   ck_assert_int_eq(0, s21_inverse_matrix(&a, &result));
   ck_assert_int_eq(1, s21_eq_matrix(&result, &true_result));
-  
+
   s21_remove_matrix(&a);
   s21_remove_matrix(&result);
   s21_remove_matrix(&true_result);
@@ -529,69 +529,69 @@ START_TEST(inverse_6) {
 }
 
 Suite *det_suite(void) {
-    Suite *s;
-    TCase *tc_core;
+  Suite *s;
+  TCase *tc_core;
 
-    s = suite_create("Matrix Determinant");
+  s = suite_create("Matrix Determinant");
 
-    tc_core = tcase_create("Core");
+  tc_core = tcase_create("Core");
 
-    tcase_add_test(tc_core, det_1);
-    tcase_add_test(tc_core, det_2);
-    tcase_add_test(tc_core, det_3);
-    tcase_add_test(tc_core, det_4);
-    tcase_add_test(tc_core, det_5);
-    tcase_add_test(tc_core, det_6);
-    tcase_add_test(tc_core, det_7);
-    tcase_add_test(tc_core, det_8);
-    tcase_add_test(tc_core, det_9);
-    tcase_add_test(tc_core, det_10);
+  tcase_add_test(tc_core, det_1);
+  tcase_add_test(tc_core, det_2);
+  tcase_add_test(tc_core, det_3);
+  tcase_add_test(tc_core, det_4);
+  tcase_add_test(tc_core, det_5);
+  tcase_add_test(tc_core, det_6);
+  tcase_add_test(tc_core, det_7);
+  tcase_add_test(tc_core, det_8);
+  tcase_add_test(tc_core, det_9);
+  tcase_add_test(tc_core, det_10);
 
-    suite_add_tcase(s, tc_core);
+  suite_add_tcase(s, tc_core);
 
-    return s;
+  return s;
 }
 
 Suite *transp_suite(void) {
-    Suite *s;
-    TCase *tc_core;
+  Suite *s;
+  TCase *tc_core;
 
-    s = suite_create("Matrix Transposition");
+  s = suite_create("Matrix Transposition");
 
-    tc_core = tcase_create("Core");
+  tc_core = tcase_create("Core");
 
-    tcase_add_test(tc_core, transp_1);
-    tcase_add_test(tc_core, transp_2);
-    tcase_add_test(tc_core, transp_3);
-    tcase_add_test(tc_core, transp_4);
-    tcase_add_test(tc_core, transp_5);
-    tcase_add_test(tc_core, transp_6);
-    tcase_add_test(tc_core, transp_7);
-    tcase_add_test(tc_core, transp_8);
-    tcase_add_test(tc_core, transp_9);
-    tcase_add_test(tc_core, transp_10);
+  tcase_add_test(tc_core, transp_1);
+  tcase_add_test(tc_core, transp_2);
+  tcase_add_test(tc_core, transp_3);
+  tcase_add_test(tc_core, transp_4);
+  tcase_add_test(tc_core, transp_5);
+  tcase_add_test(tc_core, transp_6);
+  tcase_add_test(tc_core, transp_7);
+  tcase_add_test(tc_core, transp_8);
+  tcase_add_test(tc_core, transp_9);
+  tcase_add_test(tc_core, transp_10);
 
-    suite_add_tcase(s, tc_core);
+  suite_add_tcase(s, tc_core);
 
-    return s;
+  return s;
 }
 
 Suite *inverse_suite(void) {
-    Suite *s;
-    TCase *tc_core;
+  Suite *s;
+  TCase *tc_core;
 
-    s = suite_create("Matrix Inversion");
+  s = suite_create("Matrix Inversion");
 
-    tc_core = tcase_create("Core");
+  tc_core = tcase_create("Core");
 
-    tcase_add_test(tc_core, inverse_1);
-    tcase_add_test(tc_core, inverse_2);
-    tcase_add_test(tc_core, inverse_3);
-    tcase_add_test(tc_core, inverse_4);
-    tcase_add_test(tc_core, inverse_5);
-    tcase_add_test(tc_core, inverse_6);
+  tcase_add_test(tc_core, inverse_1);
+  tcase_add_test(tc_core, inverse_2);
+  tcase_add_test(tc_core, inverse_3);
+  tcase_add_test(tc_core, inverse_4);
+  tcase_add_test(tc_core, inverse_5);
+  tcase_add_test(tc_core, inverse_6);
 
-    suite_add_tcase(s, tc_core);
+  suite_add_tcase(s, tc_core);
 
-    return s;
+  return s;
 }

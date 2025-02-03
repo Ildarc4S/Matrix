@@ -2,6 +2,7 @@
 #define TESTS_H
 
 #include <check.h>
+
 #include "./../s21_matrix.h"
 
 #define S21_EPS 1e-7
