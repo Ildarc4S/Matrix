@@ -79,12 +79,14 @@ void s21_create_minor(matrix_t *A, matrix_t *B, int skip_row, int skip_column) {
       skip = 1;
     }
 
-    for (int j = 0, column = 0; j < A->columns && !skip; j++) {
+    for (int j = 0, column = 0; j < A->columns && skip == 0; j++) {
       if (j != skip_column) {
         B->matrix[row][column++] = A->matrix[i][j];
       }
     }
-    row++;
+    if (skip == 0) {
+      row++;
+    }
   }
 }
 
@@ -141,7 +143,7 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
     result_code = kCodeCalcError;
   } else {
     det = 1.0 / det;
-    matrix_t multiplier, complements;
+    matrix_t multiplier = {0}, complements = {0};
 
     s21_calc_complements(A, &complements);
 

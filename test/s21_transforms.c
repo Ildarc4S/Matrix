@@ -314,6 +314,7 @@ START_TEST(transp_4) {
   ck_assert_int_eq(1, s21_eq_matrix(&result, &check_result));
   s21_remove_matrix(&a);
   s21_remove_matrix(&result);
+  s21_remove_matrix(&check_result);
 }
 END_TEST
 
@@ -338,24 +339,10 @@ START_TEST(transp_5) {
 END_TEST
 
 START_TEST(transp_6) {
-  matrix_t a = {0};
-  s21_create_matrix(3, 1, &a);
-  matrix_t result = {0};
-  matrix_t check_result = {0};
-  s21_create_matrix(1, 3, &check_result);
-  a.matrix[0][0] = 5;
-  a.matrix[1][0] = 6;
-  a.matrix[2][0] = 7;
-
-  check_result.matrix[0][0] = 5;
-  check_result.matrix[0][1] = 6;
-  check_result.matrix[0][2] = 7;
-
-  ck_assert_int_eq(0, s21_transpose(&a, &result));
-  ck_assert_int_eq(1, s21_eq_matrix(&result, &check_result));
-  s21_remove_matrix(&a);
+matrix_t result = {0};
+  s21_create_matrix(3, 2, &result);
+  ck_assert_int_eq(1, s21_transpose(NULL, &result));
   s21_remove_matrix(&result);
-  s21_remove_matrix(&check_result);
 }
 END_TEST
 
@@ -447,6 +434,106 @@ START_TEST(transp_10) {
 }
 END_TEST
 
+START_TEST(inverse_1) {
+ matrix_t a = {0};
+  s21_create_matrix(2, 3, &a);
+  matrix_t result = {0};
+  s21_create_matrix(3, 2, &result);
+  ck_assert_int_eq(2, s21_inverse_matrix(&a, &result));
+  s21_remove_matrix(&a);
+  s21_remove_matrix(&result);
+}
+END_TEST
+
+START_TEST(inverse_2) {
+  matrix_t a = {0};
+  s21_create_matrix(3, 3, &a);
+  matrix_t result = {0};
+  s21_create_matrix(3, 3, &result);
+  int c = 1;
+  for (int i = 0; i < 3; i++)
+    for (int j = 0; j < 3; j++) {
+      a.matrix[i][j] = c++;
+    }
+  ck_assert_int_eq(2, s21_inverse_matrix(&a, &result));
+  s21_remove_matrix(&a);
+  s21_remove_matrix(&result);
+}
+END_TEST
+
+START_TEST(inverse_3) {
+  matrix_t a = {0};
+  s21_create_matrix(2, 2, &a);
+  matrix_t result = {0};
+  matrix_t true_result = {0};
+  s21_create_matrix(2, 2, &true_result);
+  int c = 1;
+  for (int i = 0; i < 2; i++)
+    for (int j = 0; j < 2; j++) {
+      a.matrix[i][j] = c++;
+    }
+  true_result.matrix[0][0] = -2;
+  true_result.matrix[0][1] = 1;
+  true_result.matrix[1][0] = 1.5;
+  true_result.matrix[1][1] = -0.5;
+
+  ck_assert_int_eq(0, s21_inverse_matrix(&a, &result));
+  ck_assert_int_eq(1, s21_eq_matrix(&result, &true_result));
+  
+  s21_remove_matrix(&a);
+  s21_remove_matrix(&result);
+  s21_remove_matrix(&true_result);
+}
+END_TEST
+
+START_TEST(inverse_4) {
+  matrix_t a = {0};
+  s21_create_matrix(2, 2, &a);
+  matrix_t result = {0};
+  s21_create_matrix(2, 2, &result);
+  matrix_t true_result = {0};
+  s21_create_matrix(2, 2, &true_result);
+  int c = 2;
+  for (int i = 0; i < 2; i++)
+    for (int j = 0; j < 2; j++) {
+      a.matrix[i][j] = c--;
+    }
+  true_result.matrix[0][0] = 0.5;
+  true_result.matrix[0][1] = 0.5;
+  true_result.matrix[1][0] = 0;
+  true_result.matrix[1][1] = -1;
+  ck_assert_int_eq(0, s21_inverse_matrix(&a, &result));
+  ck_assert_int_eq(1, s21_eq_matrix(&result, &true_result));
+  s21_remove_matrix(&a);
+  s21_remove_matrix(&result);
+  s21_remove_matrix(&true_result);
+}
+END_TEST
+
+START_TEST(inverse_5) {
+  matrix_t a = {0};
+  s21_create_matrix(1, 1, &a);
+  matrix_t result = {0};
+  s21_create_matrix(1, 1, &result);
+  matrix_t true_result = {0};
+  s21_create_matrix(1, 1, &true_result);
+  a.matrix[0][0] = 0.5;
+  true_result.matrix[0][0] = 1.0 / 0.5;
+  ck_assert_int_eq(0, s21_inverse_matrix(&a, &result));
+  ck_assert_int_eq(1, s21_eq_matrix(&result, &true_result));
+  s21_remove_matrix(&a);
+  s21_remove_matrix(&result);
+  s21_remove_matrix(&true_result);
+}
+END_TEST
+
+START_TEST(inverse_6) {
+  matrix_t result = {0};
+  s21_create_matrix(1, 1, &result);
+  ck_assert_int_eq(1, s21_inverse_matrix(NULL, &result));
+  s21_remove_matrix(&result);
+}
+
 Suite *det_suite(void) {
     Suite *s;
     TCase *tc_core;
@@ -503,16 +590,12 @@ Suite *inverse_suite(void) {
 
     tc_core = tcase_create("Core");
 
-    // tcase_add_test(tc_core, inverse_1);
-    // tcase_add_test(tc_core, inverse_2);
-    // tcase_add_test(tc_core, inverse_3);
-    // tcase_add_test(tc_core, inverse_4);
-    // tcase_add_test(tc_core, inverse_5);
-    // tcase_add_test(tc_core, inverse_6);
-    // tcase_add_test(tc_core, inverse_7);
-    // tcase_add_test(tc_core, inverse_8);
-    // tcase_add_test(tc_core, inverse_9);
-    // tcase_add_test(tc_core, inverse_10);
+    tcase_add_test(tc_core, inverse_1);
+    tcase_add_test(tc_core, inverse_2);
+    tcase_add_test(tc_core, inverse_3);
+    tcase_add_test(tc_core, inverse_4);
+    tcase_add_test(tc_core, inverse_5);
+    tcase_add_test(tc_core, inverse_6);
 
     suite_add_tcase(s, tc_core);
 

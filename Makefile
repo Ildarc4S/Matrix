@@ -3,7 +3,7 @@ FLAGS = -Wall -Werror -Wextra -std=c11
 GCOV_FLAGS = --coverage
 CHECK_FLAGS = -lcheck -lm -lsubunit
 
-CFILES = memory.c operations.c utils.c compare.c transforms.c  
+CFILES = source/memory.c source/operations.c source/utils.c source/compare.c source/transforms.c  
 OBJS = $(CFILES:.c=.o)
 
 TEST_FILE = test/*.c 
@@ -21,7 +21,7 @@ test: $(LIB_FILE)
 
 test_valgrind: $(LIB_FILE)
 	$(CC) $(FLAGS) $(TEST_FILE) -L. $(LIB_FILE) $(CHECK_FLAGS) -o test_exec
-	valgrind ./test_exec
+	valgrind --tool=memcheck --leak-check=yes ./test_exec
 
 gcov_report:
 	$(CC) $(FLAGS) $(TEST_FILE) $(CFILES) $(CHECK_FLAGS) $(GCOV_FLAGS) -o gcov_test_lcov

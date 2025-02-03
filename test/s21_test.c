@@ -2,13 +2,13 @@
 
 int main(void) {
     int number_failed;
-    Suite *s;
     SRunner *sr;
 
     sr = srunner_create(NULL);
     srunner_add_suite(sr, sub_suite());
     srunner_add_suite(sr, sum_suite());
     srunner_add_suite(sr, mul_num_suite());
+    srunner_add_suite(sr, mul_suite());
 
     srunner_add_suite(sr, det_suite());
     srunner_add_suite(sr, transp_suite());

@@ -54,7 +54,7 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
   return result_code;
 }
 
-void mult_process(matrix_t* result, matrix_t* A, matrix_t* B) {
+void s21_mult_process(matrix_t* result, matrix_t* A, matrix_t* B) {
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < B->columns; j++) {
         for (int k = 0; k < A->columns; k++) {
@@ -75,7 +75,7 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
   S21OperationsResultCode result_code = kCodeOK;
 
   if (s21_create_matrix(A->rows, B->columns, result) != 1) {
-    mult_process(result, A, B);
+    s21_mult_process(result, A, B);
   } else {
     result_code = kCodeIncorrect;
   }
