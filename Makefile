@@ -11,7 +11,7 @@ LIB_FILE = s21_matrix.a
 
 FILES_REPORT = *.gcno *.gcda gcov_test coverage.info gcov_test_lcov report_gcov report_lcov
 
-all: $(LIB_FILE) test
+all: $(LIB_FILE)
 
 rebuild: clean all
 

@@ -487,11 +487,8 @@ START_TEST(inverse_3) {
 END_TEST
 
 START_TEST(inverse_4) {
-  matrix_t a = {0};
+  matrix_t a = {0}, result = {0}, true_result = {0};
   s21_create_matrix(2, 2, &a);
-  matrix_t result = {0};
-  s21_create_matrix(2, 2, &result);
-  matrix_t true_result = {0};
   s21_create_matrix(2, 2, &true_result);
   int c = 2;
   for (int i = 0; i < 2; i++)
@@ -511,11 +508,8 @@ START_TEST(inverse_4) {
 END_TEST
 
 START_TEST(inverse_5) {
-  matrix_t a = {0};
+  matrix_t a = {0}, result = {0}, true_result = {0};
   s21_create_matrix(1, 1, &a);
-  matrix_t result = {0};
-  s21_create_matrix(1, 1, &result);
-  matrix_t true_result = {0};
   s21_create_matrix(1, 1, &true_result);
   a.matrix[0][0] = 0.5;
   true_result.matrix[0][0] = 1.0 / 0.5;

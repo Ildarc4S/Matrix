@@ -14,5 +14,6 @@ Suite *transp_suite(void);
 Suite *inverse_suite(void);
 Suite *mul_num_suite(void);
 Suite *mul_suite(void);
+Suite *compare_suite(void);
 
 #endif
