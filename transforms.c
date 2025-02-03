@@ -99,7 +99,11 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
   S21OperationsResultCode result_code = kCodeOK;
 
   matrix_t minor;
-  if (s21_create_matrix(A->rows, A->columns, result) != 1 && s21_create_matrix(A->rows-1, A->columns-1, &minor) != 1) {
+  if (A->rows == 1) {
+    if (s21_create_matrix(A->rows, A->columns, result) != 1) {
+       result->matrix[0][0] = A->matrix[0][0];
+    }
+  } else if (s21_create_matrix(A->rows, A->columns, result) != 1 && s21_create_matrix(A->rows-1, A->columns-1, &minor) != 1) {
   for (int i = 0; i < A->rows; i++) {
     for (int j = 0; j < A->columns; j++) {
       double det = 0.0;
@@ -173,6 +177,7 @@ int s21_determinant(matrix_t *A, double *result) {
   if (s21_triangulate_matrix(&B, &swap_count) == -1) {
     det = 0.0;
   } else {
+    s21_print_matrix(&B);
     if (swap_count % 2 == 1) {
       det = -1.0;
     }
